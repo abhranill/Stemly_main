@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 interface SearchInterfaceProps {
   onSubmit: (topic: string) => void;
@@ -8,37 +9,70 @@ interface SearchInterfaceProps {
   autoFocus?: boolean;
 }
 
-export default function SearchInterface({ onSubmit, initialValue = '', autoFocus = true }: SearchInterfaceProps) {
+export default function SearchInterface({
+  onSubmit,
+  initialValue = '',
+  autoFocus = true,
+}: SearchInterfaceProps) {
   const [value, setValue] = useState(initialValue);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
     const trimmed = value.trim();
+
     if (!trimmed) return;
+
     onSubmit(trimmed);
   }
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className="group flex items-center gap-3 rounded-xl border border-hairline bg-surface px-5 py-4 transition-all duration-300 focus-within:border-accent focus-within:shadow-[0_0_0_3px_var(--color-accent-soft)]">
-        <span className="font-display text-lg text-ink-faint select-none">→</span>
+      <div className="search-shell flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2 pl-5 shadow-[0_10px_40px_rgba(15,23,42,0.05)]">
+        <Sparkles
+          size={20}
+          strokeWidth={1.8}
+          className="shrink-0 text-blue-600"
+        />
+
         <input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Enter any STEM concept — wave interference, ionization energy, Bayes' theorem…"
+          placeholder="Ask about a STEM concept..."
           autoFocus={autoFocus}
           maxLength={200}
-          className="w-full bg-transparent font-body text-base text-ink placeholder:text-ink-faint focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400 sm:text-base"
         />
+
         <button
           type="submit"
           disabled={!value.trim()}
-          className="shrink-0 rounded-lg bg-ink px-4 py-2 font-body text-sm font-medium text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent disabled:pointer-events-none disabled:opacity-30 disabled:hover:translate-y-0"
+          className="group flex shrink-0 items-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-600 disabled:pointer-events-none disabled:opacity-35 sm:px-5"
         >
-          Visualize
+          <span className="hidden sm:inline">Explore</span>
+
+          <ArrowRight
+            size={17}
+            className="transition-transform group-hover:translate-x-0.5"
+          />
         </button>
       </div>
+
+      <p className="mt-3 text-center text-xs text-slate-400">
+        Try something like{' '}
+        <span className="font-medium text-slate-500">
+          wave interference
+        </span>
+        ,{' '}
+        <span className="font-medium text-slate-500">
+          projectile motion
+        </span>{' '}
+        or{' '}
+        <span className="font-medium text-slate-500">
+          enzyme kinetics
+        </span>
+      </p>
     </form>
   );
 }
